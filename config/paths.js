@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const fs = require('fs');
 const getPublicUrlOrPath = require('react-dev-utils/getPublicUrlOrPath');
@@ -18,7 +16,7 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 const publicUrlOrPath = getPublicUrlOrPath(
   process.env.NODE_ENV === 'development',
   require(resolveApp('package.json')).homepage,
-  process.env.PUBLIC_URL
+  process.env.PUBLIC_URL,
 );
 
 const moduleFileExtensions = [
@@ -33,13 +31,17 @@ const moduleFileExtensions = [
   'json',
   'web.jsx',
   'jsx',
+  'css',
+  'global.css',
+  'scss',
+  'global.scss',
 ];
 
 // Resolve file paths in the same order as webpack
 const resolveModule = (resolveFn, filePath) => {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const extension = moduleFileExtensions.find(extension =>
-    fs.existsSync(resolveFn(`${filePath}.${extension}`))
-  );
+    fs.existsSync(resolveFn(`${filePath}.${extension}`)));
 
   if (extension) {
     return resolveFn(`${filePath}.${extension}`);
@@ -64,9 +66,24 @@ module.exports = {
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
+  // user defined
+  appGlobal: resolveApp('src/global'),
+  globalComp: resolveApp('src/global/components'),
+  globalScss: resolveApp('src/global/scss'),
+  globalStore: resolveApp('src/global/store'),
+  globalStyled: resolveApp('src/global/styled'),
+  appComp: resolveApp('src/components'),
+  appCon: resolveApp('src/containers'),
+  appStore: resolveApp('src/store'),
+  appScss: resolveApp('src/scss'),
+  appUtils: resolveApp('src/utils'),
+  appTools: resolveApp('src/utils/tools'),
+  themeConfig: resolveApp('src/utils/themeConfig'),
+  appStatic: resolveApp('src/static'),
+  appImage: resolveApp('src/static/image'),
+  appDocs: resolveApp('src/docs'),
+  appTest: resolveApp('src/test'),
   publicUrlOrPath,
 };
-
-
 
 module.exports.moduleFileExtensions = moduleFileExtensions;
